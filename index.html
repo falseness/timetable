@@ -1,0 +1,111 @@
+<!Doctype html>
+<html>
+    <head>
+        <title></title>
+        <meta charset = "UTF-8">
+        <script src = "vue.js"></script>
+        <link rel = "stylesheet" href = "style.css">
+    </head>
+    <body>
+        <div id = "app">
+            <button id = "buttonDailyTasks" @click = "showDailyTasks = true" v-on:click = "drawDailyTasks">Ежедневные задачи</button>
+                <ul v-if = "showDailyTasks">
+                    <li v-for = "(thisTask, taskIndex) in dailyTasks" v-on:click = "deleteThisTask(taskIndex)" class = "task">
+                            <div class = "dailyTaskBox">
+                                <img class = "icon" src="icons/taskicon.svg">
+                                <input class="input dailyTask" v-model = "thisTask.taskInfo">
+                            </div>
+                            <div class = "dailyTaskBox">
+                                <img class = "icon" src = "icons/timeicon.svg">
+                                <input class="input dailyTaskTime" v-model = "thisTask.timeInfo">
+                            </div>
+                    </li>
+                </ul>
+            <button class = "menuIcon" id = "buttonAddDailyTask" v-on:click = "addDailyTask"></button>
+            <button class = "menuIcon" id = "buttonDeleteDailyTask" v-on:click = "deleteDailyTask"></button>
+            <button class = "menuIcon" id = "buttonEditDailyTask" v-on:click = "editDailyTask"></button>
+        </div>
+        
+        
+        
+        <script>
+            
+            new Vue(
+            {
+                el:'#app',
+                data:
+                {
+                    dailyTasks: 
+                    [
+                        {
+                            taskInfo: "Типа инфа",
+                            timeInfo: "Типа время"
+                        },
+                        {
+                            taskInfo: "Типа djjhskjsh",
+                            timeInfo: "Типа kek"
+                        },
+                        {
+                            taskInfo: "Типа инфа",
+                            timeInfo: "Типа время"
+                        }
+                    ],
+                    showDailyTasks: false,
+                    deleteDailyTasks: false,
+                    editDailyTasks: false
+                },
+                methods:
+                {
+                    drawDailyTasks()
+                    {
+                        console.log(JSON.parse(localStorage.getItem('dailyTasks')))
+                        if (!JSON.parse(localStorage.getItem('dailyTasks')))
+                            localStorage.setItem('dailyTasks', JSON.stringify(this.dailyTasks))
+                        else
+                        {
+                            this.dailyTasks = JSON.parse(localStorage.getItem('dailyTasks'))
+                        }
+                    },
+                    addDailyTask()
+                    {
+                        this.dailyTasks.push(
+                        {
+                            taskInfo: "Info",
+                            timeInfo: "Time"
+                        })
+                        localStorage.setItem('dailyTasks', JSON.stringify(this.dailyTasks))
+                        console.log( JSON.parse(localStorage.getItem('dailyTasks')) ) 
+
+/*/ Update
+const updatedUser = { name: 'Ire Aderinokun', age: 24 }  
+localStorage.setItem('user', JSON.stringify(updatedUser));
+
+// Delete
+localStorage.removeItem('user'); */
+                    },
+                    deleteDailyTask()
+                    {
+                        this.deleteDailyTasks = !this.deleteDailyTasks
+                        if (this.deleteDailyTasks)
+                            buttonDeleteDailyTask.style.backgroundImage = 'url("icons/confirmicon.svg")'
+                        else
+                            buttonDeleteDailyTask.style.backgroundImage = 'url("icons/trashicon.svg")'
+                    },
+                    deleteThisTask(taskIndex)
+                    {
+                        if (this.deleteDailyTasks)
+                            this.dailyTasks.splice(taskIndex, 1)
+                    },
+                    editDailyTask()
+                    {
+                        this.editDailyTasks = !this.editDailyTasks
+                        if (this.editDailyTasks)
+                            buttonEditDailyTask.style.backgroundImage = 'url("icons/confirmicon.svg")'
+                        else
+                            buttonEditDailyTask.style.backgroundImage = 'url("icons/editicon.svg")'
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>
