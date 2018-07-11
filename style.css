@@ -1,75 +1,95 @@
 body
 {
     background:#34c924;
+    margin:0;
 }
 button
 {
     display:block;
     border:none;
+    padding:0;
 }
 
 ul
 {
     list-style: none;
-}
-li
-{
-    display:inline-block;
-    vertical-align: top;
-}
-.dailyTaskBox:last-child
-{
-    margin-top:3vh;
+    margin:0;
+    padding:0;
+    width:100%;
 }
 .icon
 {
-    width:3vw;
+    width:10vh;
     vertical-align: top;
 }
 .menuIcon
 {
     border-radius:50%;
-    height: 6vw;
-    width: 6vw;
+    border: 1px solid black;
+    height: 12vw;
+    width: 12vw;
 }
 .input
 {
     border:none;
-    border-bottom: 1px solid black;
     text-align:center;
-    width: 6vw;
     display:inline-block;
-    font-size:1vw;
+    width: calc(90vw - 11vh);
+    vertical-align: middle;
+    font-size:7vw;
 }
 
 
 .task
 {
-    width: 10vw;
+    width: 90vw;
+    margin: 1vh auto;
     padding: 3vh 1vw; 
     background:white;
-    margin: 1vh 0 0 1vw;
+    
 }
 #buttonDailyTasks
 {
     background-color:white;
     margin:auto;
     text-align:center;
-    font-size:2vw;
-    padding: 5vh 1vw;
+    font-size:8vw;
+    padding: 3vh 6vw;
+}
+.dailyTaskIcon
+{
+    width:10vw;
+    height:5vh;
+    border-radius:50%;
 }
 #buttonAddDailyTask
 {
     background:white url("icons/addicon.svg") 100%/contain no-repeat;
-    margin:auto;
 }
-#buttonDeleteDailyTask
+.buttonsMenu
+{
+    display:flex;
+    flex-direction:row;
+    justify-content:space-around;
+    position:fixed;
+    bottom:1vh;
+    width:100%;
+}
+.deleteDailyTask
 {
     background:white url("icons/trashicon.svg") 100%/contain no-repeat;
-    margin:auto;
 }
-#buttonEditDailyTask
+.editDailyTask
 {
     background:white url("icons/editicon.svg") 100%/contain no-repeat;
-    margin:auto;
+}
+.dailyTaskIconsBox
+{
+    display:flex;
+    flex-direction:row;
+    justify-content:space-around;
+}
+.input[contenteditable = true]
+{
+    border-bottom: 1px solid black;
 }
