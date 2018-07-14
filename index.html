@@ -8,6 +8,8 @@
         <script src = "vue.js"></script>
     </head>
     <body>
+        <script type="text/javascript" src="cordova.js"></script>
+        
         <div id = "app">
             <button onclick="notifyMe()">Notify me!</button>
 
@@ -17,11 +19,12 @@
                         
                             <div class = "dailyTaskBox">
                                 <img class = "icon" src="icons/taskicon.svg">
-                                <div class = "input dailyTask" :contenteditable = "thisTask.edit" ref = "taskInfoInput">{{ thisTask.taskInfo }}</div>
+                                <div class = "input dailyTask" :contenteditable = "thisTask.edit" ref = "taskInfoInput" v-html = "thisTask.taskInfo"></div>
                             </div>
                             <div class = "dailyTaskTimeBox">
                                 <img class = "icon" src = "icons/timeicon.svg">
-                                <div class = "input dailyTaskTime" :contenteditable = "thisTask.edit" ref = "taskTimeInput">{{ thisTask.timeInfo }}</div>
+                                <div class = "input dailyTaskTime" :contenteditable = "thisTask.edit" ref = "taskTimeInputHours" v-text = "thisTask.timeInfo.hours"></div>
+                                <div class = "input dailyTaskTime" :contenteditable = "thisTask.edit" ref = "taskTimeInputMinutes" v-text = "thisTask.timeInfo.minutes"></div>
                             </div>
                             <hr>
                             <div class = "dailyTaskIconsBox">
@@ -38,97 +41,133 @@
         
         
         <script>
-            
-            new Vue(
+            function main()
             {
-                el:'#app',
-                data:
-                {
-                    dailyTasks: 
-                    [
-                        {
-                            taskInfo: "Типа инфа",
-                            timeInfo: "Типа время",
-                            edit: false
-                        },
-                        {
-                            taskInfo: "Типа djjhskjsh",
-                            timeInfo: "Типа kek",
-                            edit: false
-                        },
-                        {
-                            taskInfo: "Типа инфа",
-                            timeInfo: "Типа время",
-                            edit: false
-                        }
-                    ],
-                    showDailyTasks: true,
-                    deleteDailyTasks: false,
-                    editDailyTasks: false
-                },
-                methods:
-                {
-                    drawDailyTasks()
-                    {
-                        console.log(JSON.parse(localStorage.getItem('dailyTasks')))
-                        if (!JSON.parse(localStorage.getItem('dailyTasks')))
-                            localStorage.setItem('dailyTasks', JSON.stringify(this.dailyTasks))
-                        else
-                        {
-                            this.dailyTasks = JSON.parse(localStorage.getItem('dailyTasks'))
-                        }
-                    },
-                    addDailyTask()
-                    {
-                        this.dailyTasks.push(
-                        {
-                            taskInfo: "Info",
-                            timeInfo: "Time",
-                            edit:false
-                        })
-                        localStorage.setItem('dailyTasks', JSON.stringify(this.dailyTasks))
-                        console.log('Task added: \n')
-                        console.log(JSON.parse(localStorage.getItem('dailyTasks')))
-                    },
-                    deleteThisTask(taskIndex)
-                    {
-                        this.dailyTasks.splice(taskIndex, 1)
-                        localStorage.setItem('dailyTasks', JSON.stringify(this.dailyTasks))
-                        console.log('Task deleted: \n')
-                        console.log(JSON.parse(localStorage.getItem('dailyTasks')))
-                    },
-                    editThisTask(taskIndex, thisTask)
-                    {
-                        console.log('ok')
-                        thisTask.edit = !thisTask.edit
-                        if (thisTask.edit)
-                            event.target.style.backgroundImage = 'url("icons/confirmicon.svg")'
-                        else
-                        {
-                            event.target.style.backgroundImage = 'url("icons/editicon.svg")'
-                            thisTask.taskInfo = this.$refs.taskInfoInput[taskIndex].innerHTML
-                            thisTask.timeInfo = this.$refs.taskTimeInput[taskIndex].innerHTML
-                        }
-                        localStorage.setItem('dailyTasks', JSON.stringify(this.dailyTasks))
-                        console.log('Task edited: \n') 
-                        console.log(JSON.parse(localStorage.getItem('dailyTasks')))
+                var localService = Cocoon.Notification.Local;
+ 
+                localService.on('notification', function(userData){
+                    alert('Received local notification: ' + JSON.stringify(userData));
+                });
+
+                localService.initialize({}, function(registered){
+                    localService.registered = registered;
+                });
+                
+                localService.on('notification', function(userData){
+                    alert('Received local notification: ' + JSON.stringify(userData));
+                });
+                var notification = {
+                    message : "Hi, I am a notification",
+                    soundEnabled : true,
+                    badgeNumber : 1,
+                    userData : {"key1" : "value1", "key2": "value2", "index": index},
+                    contentBody : "",
+                    contentTitle : "",
+                    date : new Date().valueOf() + 5000
+                };
+                localService.send(notification, function(error){
+
+                    if (error) {
+                        alert('Error: ' + error.message);
                     }
-                }
-            })
-            function notifyMe() {
-                      Notification.requestPermission(function(result) {
-                        if (result === 'granted') {
-                          navigator.serviceWorker.ready.then(function(registration) {
-                            registration.showNotification('Vibration Sample', {
-                              body: 'Buzz! Buzz!',
-                              icon: '../images/touch/chrome-touch-icon-192x192.png',
-                              vibrate: [200, 100, 200, 100, 200, 100, 200],
-                              tag: 'vibration-sample'
-                            });
+
+                });
+ 
+
+                let timetable = new Vue(
+                {
+                    el:'#app',
+                    data:
+                    {
+                        dailyTasks: 
+                        [
+                        ],
+                        showDailyTasks: true,
+                        deleteDailyTasks: false,
+                        editDailyTasks: false
+                    },
+                    methods:
+                    {
+                        drawDailyTasks()
+                        {
+                            console.log(JSON.parse(localStorage.getItem('dailyTasks')))
+                            if (!JSON.parse(localStorage.getItem('dailyTasks')))
+                            {
+                                this.addDailyTask()
+                                localStorage.setItem('dailyTasks', JSON.stringify(this.dailyTasks))
+                            }
+                            else
+                                this.dailyTasks = JSON.parse(localStorage.getItem('dailyTasks'))
+                        },
+                        addDailyTask()
+                        {
+                            this.dailyTasks.push(
+                            {
+                                taskInfo: "Info",
+                                timeInfo: 
+                                {
+                                    hours:0,
+                                    minutes:0
+                                },
+                                edit:false
+                            })
+                            localStorage.setItem('dailyTasks', JSON.stringify(this.dailyTasks))
+                            console.log('Task added: \n')
+                            console.log(JSON.parse(localStorage.getItem('dailyTasks')))
+                        },
+                        deleteThisTask(taskIndex)
+                        {
+                            this.dailyTasks.splice(taskIndex, 1)
+                            localStorage.setItem('dailyTasks', JSON.stringify(this.dailyTasks))
+                            console.log('Task deleted: \n')
+                            console.log(JSON.parse(localStorage.getItem('dailyTasks')))
+                        },
+                        editThisTask(taskIndex, thisTask)
+                        {
+                            console.log('ok')
+                            thisTask.edit = !thisTask.edit
+                            if (thisTask.edit)
+                                event.target.style.backgroundImage = 'url("icons/confirmicon.svg")'
+                            else
+                            {
+                                event.target.style.backgroundImage = 'url("icons/editicon.svg")'
+                                thisTask.taskInfo = String(this.$refs.taskInfoInput[taskIndex].innerHTML)
+                                
+                                let t = this.$refs.taskTimeInputHours[taskIndex].innerHTML
+                                t = isNaN(Number(t))?0:(t % 24)
+                                this.$refs.taskTimeInputHours[taskIndex].innerHTML = t        
+                                thisTask.timeInfo.hours = t 
+                                
+                                t = this.$refs.taskTimeInputMinutes[taskIndex].innerHTML
+                                t = isNaN(Number(t))?0:(t % 60)
+                                this.$refs.taskTimeInputMinutes[taskIndex].innerHTML = t
+                                thisTask.timeInfo.minutes = t
+                            }
+                            localStorage.setItem('dailyTasks', JSON.stringify(this.dailyTasks))
+                            console.log('Task edited: \n') 
+                            console.log(JSON.parse(localStorage.getItem('dailyTasks')))
+                        }
+                    }
+                })
+                //
+                timetable.drawDailyTasks()
+                //
+                function notifyMe() {
+                          Notification.requestPermission(function(result) {
+                            if (result === 'granted') {
+                              navigator.serviceWorker.ready.then(function(registration) {
+                                registration.showNotification('Vibration Sample', {
+                                  body: 'Buzz! Buzz!',
+                                  icon: '../images/touch/chrome-touch-icon-192x192.png',
+                                  vibrate: [200, 100, 200, 100, 200, 100, 200],
+                                  tag: 'vibration-sample'
+                                });
+                              });
+                            }
                           });
                         }
-                      });
-                    }
+            }
+            document.addEventListener('deviceready', main, false)
         </script>
     </body>
 </html>

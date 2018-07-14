@@ -1,6 +1,6 @@
 body
 {
-    background:#34c924;
+    background:#000000;
     margin:0;
 }
 button
@@ -26,8 +26,13 @@ ul
 {
     border-radius:50%;
     border: 1px solid black;
-    height: 12vw;
-    width: 12vw;
+    height: 16vw;
+    width: 16vw;
+    position:fixed;
+    bottom:1vw;
+    left:0;
+    right:0;
+    margin:auto;
 }
 .input
 {
@@ -46,7 +51,10 @@ ul
     margin: 1vh auto;
     padding: 3vh 1vw; 
     background:white;
-    
+}
+.task:last-child
+{
+    margin-bottom:18vw;
 }
 #buttonDailyTasks
 {
@@ -65,15 +73,6 @@ ul
 #buttonAddDailyTask
 {
     background:white url("icons/addicon.svg") 100%/contain no-repeat;
-}
-.buttonsMenu
-{
-    display:flex;
-    flex-direction:row;
-    justify-content:space-around;
-    position:fixed;
-    bottom:1vh;
-    width:100%;
 }
 .deleteDailyTask
 {
